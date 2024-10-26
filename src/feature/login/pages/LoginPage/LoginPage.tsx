@@ -10,6 +10,7 @@ import { auth } from "@/lib/firebase";
 
 import { LoginPageProps } from "./interface";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/util";
 
 export function LoginPage({ className }: LoginPageProps) {
   const router = useRouter();
@@ -32,7 +33,7 @@ export function LoginPage({ className }: LoginPageProps) {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[100dvh] bg-slate-100">
+    <div className={cn("flex items-center justify-center min-h-[100dvh] bg-slate-100",className)}>
       <div className="w-full max-w-[500px] p-8 bg-white rounded-lg shadow-md mx-[16px]">
         <Title level={1} className="text-center mb-6">
           ADMIN LOGIN

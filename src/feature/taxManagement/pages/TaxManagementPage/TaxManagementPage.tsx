@@ -28,7 +28,7 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
   const [description, setDescription] = useState<string>("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const {logout} = useAuthentication();
+  const { logout } = useAuthentication();
 
   const itemsCollection = collection(db, "items");
 
@@ -100,7 +100,7 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
   };
 
   return (
-    <div>
+    <div className={className}>
       <button onClick={logout}>logout</button>
       <h1>Manage Items</h1>
 

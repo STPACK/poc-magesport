@@ -54,7 +54,11 @@ export function RetailManagementPage({ className }: RetailManagementPageProps) {
     setEditRetail(data || null);
     setIsModalOpen(true);
     if (data) {
-      form.setFieldsValue({ name: data.name, shopLink: data.shopLink, avatar: data.imageUrl });
+      form.setFieldsValue({
+        name: data.name,
+        shopLink: data.shopLink,
+        avatar: data.imageUrl,
+      });
       setImageUrl(data.imageUrl || null);
     } else {
       form.resetFields();
@@ -160,7 +164,7 @@ export function RetailManagementPage({ className }: RetailManagementPageProps) {
   };
 
   return (
-    <div>
+    <div className={className}>
       <div className="flex items-center justify-between mb-[32px]">
         <p className="text-[32px] font-semibold">Retail Store Management</p>
         <Button type="primary" onClick={() => showModal()} size="large">
