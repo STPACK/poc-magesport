@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import { ToastContainer } from "react-toastify";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 
+import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,7 +17,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AntdRegistry>{children}</AntdRegistry>
+
+        <ToastContainer
+          autoClose={2000}
+          closeButton={false}
+          hideProgressBar
+          closeOnClick
+          rtl={false}
+          position="top-right"
+          pauseOnHover
+          draggable={false}
+        />
+      </body>
     </html>
   );
 }

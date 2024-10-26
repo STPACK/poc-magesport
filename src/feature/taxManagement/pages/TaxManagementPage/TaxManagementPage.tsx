@@ -13,6 +13,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useAuthentication } from "@/hooks/auth/useAuthentication";
 
 interface Item {
   id: string;
@@ -27,6 +28,7 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
   const [description, setDescription] = useState<string>("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const {logout} = useAuthentication();
 
   const itemsCollection = collection(db, "items");
 
@@ -99,6 +101,7 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
 
   return (
     <div>
+      <button onClick={logout}>logout</button>
       <h1>Manage Items</h1>
 
       <form

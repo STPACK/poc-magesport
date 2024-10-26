@@ -5,9 +5,5 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <section>
-      <AuthenticationProvider>{children}</AuthenticationProvider>
-    </section>
-  );
+  return <AuthenticationProvider> {children}</AuthenticationProvider>;
 }
