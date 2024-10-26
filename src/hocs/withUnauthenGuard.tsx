@@ -10,7 +10,7 @@ export function withUnauthenGuard<P extends object>(Component: React.FC<P>) {
 
     useEffect(() => {
       if (isAuthenticated && user) {
-        router.replace("/admin-back-office");
+        router.replace("/admin-back-office/retail-store");
       }
     }, [isAuthenticated, isUserLoading, user]);
 
