@@ -1,151 +1,264 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { TaxManagementPageProps } from "./interface";
 
-// app/manage/page.tsx
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Upload, Button, message, List, Modal, Input, Pagination } from "antd";
+import {
+  UploadOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import { db, storage } from "@/lib/firebase";
 import {
   collection,
   addDoc,
+  doc,
   updateDoc,
   deleteDoc,
   getDocs,
-  doc,
+  query,
+  orderBy,
+  limit,
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useAuthentication } from "@/hooks/auth/useAuthentication";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
+import type { UploadFile } from "antd/es/upload/interface";
+import { dataFromMillis } from "@/lib/util";
 
-interface Item {
+interface UploadedFile {
   id: string;
   name: string;
-  description: string;
-  imageUrl?: string;
+  originalName: string;
+  url: string;
+  createdAt: number;
 }
 
 export function TaxManagementPage({ className }: TaxManagementPageProps) {
-  const [items, setItems] = useState<Item[]>([]);
-  const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const { logout } = useAuthentication();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [editingFile, setEditingFile] = useState<UploadedFile | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const itemsCollection = collection(db, "items");
+  const pageSize = 20;
+  const maxFiles = 500;
 
-  // Fetch items from Firestore
+  const showModal = () => setIsModalOpen(true);
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setFileList([]);
+  };
+
   useEffect(() => {
-    const fetchItems = async () => {
-      const querySnapshot = await getDocs(itemsCollection);
-      const itemsData = querySnapshot.docs.map((doc) => ({
+    const fetchFiles = async () => {
+      const filesQuery = query(
+        collection(db, "pdfFiles"),
+        orderBy("createdAt", "desc"),
+        limit(maxFiles)
+      );
+      const querySnapshot = await getDocs(filesQuery);
+      const files: UploadedFile[] = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data(),
-      })) as Item[];
-      setItems(itemsData);
+        ...(doc.data() as Omit<UploadedFile, "id">),
+      }));
+      setUploadedFiles(files);
     };
-    fetchItems();
+    fetchFiles();
   }, []);
 
-  // Create a new item with an image
-  const createItem = async () => {
-    if (name.trim() === "" || description.trim() === "") return;
+  const handleChange = ({ fileList }: { fileList: UploadFile[] }) =>
+    setFileList(fileList);
 
-    let imageUrl = "";
-    if (imageFile) {
-      imageUrl = await uploadImageToStorage(imageFile);
+  const handleUpload = async () => {
+    setUploading(true);
+    const uploadedFileData: UploadedFile[] = [];
+
+    for (const file of fileList) {
+      try {
+        const originalName = file.name.replace(/\.pdf$/i, "");
+        const uniqueFilename = `${Date.now()}_${originalName}`;
+        const storageRef = ref(storage, `pdfs/${uniqueFilename}`);
+
+        const snapshot = await uploadBytes(
+          storageRef,
+          file.originFileObj as File
+        );
+        const downloadURL = await getDownloadURL(snapshot.ref);
+
+        const createdAt = Date.now();
+        const docRef = await addDoc(collection(db, "pdfFiles"), {
+          name: uniqueFilename,
+          originalName,
+          url: downloadURL,
+          createdAt,
+        });
+
+        uploadedFileData.push({
+          id: docRef.id,
+          name: uniqueFilename,
+          originalName,
+          url: downloadURL,
+          createdAt,
+        });
+        message.success(`Uploaded ${file.name} successfully!`);
+      } catch (error) {
+        message.error(`Failed to upload ${file.name}`);
+        console.error("Error uploading file:", error);
+      }
     }
 
-    await addDoc(itemsCollection, { name, description, imageUrl });
-    setName("");
-    setDescription("");
-    setImageFile(null);
+    setUploadedFiles((prev) => [...uploadedFileData, ...prev]);
+    setFileList([]);
+    setUploading(false);
+    setIsModalOpen(false);
   };
 
-  // Update an existing item with a new image
-  const updateItem = async () => {
-    if (!selectedId || name.trim() === "" || description.trim() === "") return;
-
-    const itemRef = doc(db, "items", selectedId);
-    let imageUrl = "";
-
-    if (imageFile) {
-      imageUrl = await uploadImageToStorage(imageFile);
+  const handleEdit = async (file: UploadedFile) => {
+    const editingFileName = editingFile?.originalName.trim();
+    if (
+      !editingFile ||
+      !editingFileName ||
+      editingFileName === file.originalName
+    ) {
+      setEditingFile(null);
+      return; // No update if name hasn't changed
     }
-
-    await updateDoc(itemRef, { name, description, imageUrl });
-    setSelectedId(null);
-    setName("");
-    setDescription("");
-    setImageFile(null);
+    try {
+      const fileDocRef = doc(db, "pdfFiles", editingFile.id);
+      await updateDoc(fileDocRef, { originalName: editingFileName });
+      setUploadedFiles((prev) =>
+        prev.map((f) =>
+          f.id === editingFile.id ? { ...f, originalName: editingFileName } : f
+        )
+      );
+      setEditingFile(null);
+      message.success("File name updated successfully!");
+    } catch (error) {
+      console.error("Error updating file name:", error);
+      message.error("Failed to update file name.");
+    }
   };
 
-  // Delete an item
-  const deleteItem = async (id: string) => {
-    const itemRef = doc(db, "items", id);
-    await deleteDoc(itemRef);
+  const handleDelete = async (file: UploadedFile) => {
+    try {
+      const fileRef = ref(storage, `pdfs/${file.name}`);
+      await deleteObject(fileRef);
+      const fileDocRef = doc(db, "pdfFiles", file.id);
+      await deleteDoc(fileDocRef);
+      setUploadedFiles((prev) => prev.filter((f) => f.id !== file.id));
+      message.success("File deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting file:", error);
+      message.error("Failed to delete file.");
+    }
   };
 
-  // Select an item for editing
-  const selectItem = (item: Item) => {
-    setSelectedId(item.id);
-    setName(item.name);
-    setDescription(item.description);
-    setImageFile(null); // Reset the file input
-  };
-
-  // Handle file upload to Firebase Storage
-  const uploadImageToStorage = async (file: File) => {
-    const storageRef = ref(storage, `images/${file.name}`);
-    await uploadBytes(storageRef, file);
-    return await getDownloadURL(storageRef);
-  };
+  const paginatedFiles = uploadedFiles.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   return (
     <div className={className}>
-      <button onClick={logout}>logout</button>
-      <h1>Manage Items</h1>
+      <div className="flex items-center justify-between mb-[32px]">
+        <p className="text-[32px] font-semibold">Tax Invoice Management</p>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          selectedId ? updateItem() : createItem();
-        }}
+        <Button type="primary" onClick={showModal} size="large">
+          Upload Tax invoice
+        </Button>
+      </div>
+
+      <Modal
+        title="PDF Upload"
+        open={isModalOpen}
+        onCancel={handleCancel}
+        footer={null}
       >
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) =>
-            setImageFile(e.target.files ? e.target.files[0] : null)
-          }
-        />
-        <button type="submit">
-          {selectedId ? "Update Item" : "Create Item"}
-        </button>
-      </form>
+        <Upload.Dragger
+          multiple
+          beforeUpload={() => false}
+          fileList={fileList}
+          onChange={handleChange}
+          accept=".pdf"
+        >
+          <p className="ant-upload-drag-icon">
+            <UploadOutlined />
+          </p>
+          <p className="ant-upload-text">
+            Drag and drop PDF files here or click to select
+          </p>
+        </Upload.Dragger>
 
-      <ul>
-        {items.map((item) => (
-          <li key={item.id}>
-            <h3>{item.name}</h3>
-            <p>{item.description}</p>
-            {item.imageUrl && (
-              <img src={item.imageUrl} alt={item.name} width="100" />
+        <Button
+          type="primary"
+          onClick={handleUpload}
+          disabled={fileList.length === 0 || uploading}
+          loading={uploading}
+          style={{ marginTop: 16 }}
+        >
+          {uploading ? "Uploading..." : "Start Upload"}
+        </Button>
+      </Modal>
+
+      <List
+        header={<div>Tax Invoice Files</div>}
+        bordered
+        dataSource={paginatedFiles}
+        renderItem={(file) => (
+          <List.Item
+            actions={[
+              <Button
+                key="edit"
+                icon={<EditOutlined />}
+                onClick={() => setEditingFile(file)}
+              />,
+              <Button
+                key="delete"
+                icon={<DeleteOutlined />}
+                danger
+                onClick={() => handleDelete(file)}
+              />,
+            ]}
+          >
+            {editingFile && editingFile.id === file.id ? (
+              <Input
+                value={editingFile.originalName}
+                autoFocus
+                onChange={(e) =>
+                  setEditingFile({
+                    ...editingFile,
+                    originalName: e.target.value,
+                  })
+                }
+                onBlur={() => handleEdit(file)}
+              />
+            ) : (
+              <div className="flex justify-between items-center w-full">
+                <a href={file.url} target="_blank" rel="noopener noreferrer">
+                  {file.originalName}
+                </a>
+                <div style={{ fontSize: "12px", color: "gray" }}>
+                  {dataFromMillis(file.createdAt)}
+                </div>
+              </div>
             )}
-            <button onClick={() => selectItem(item)}>Edit</button>
-            <button onClick={() => deleteItem(item.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+          </List.Item>
+        )}
+        style={{ marginTop: 24 }}
+      />
+
+      <Pagination
+        current={currentPage}
+        pageSize={pageSize}
+        total={uploadedFiles.length}
+        onChange={(page) => setCurrentPage(page)}
+        style={{ marginTop: 16, textAlign: "center" }}
+      />
     </div>
   );
 }
