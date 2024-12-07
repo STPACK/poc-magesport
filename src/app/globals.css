@@ -17,3 +17,8 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+.ant-pagination-simple-pager input {
+  cursor: not-allowed;
+  pointer-events: none;
+}
