@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
+  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
@@ -11,6 +11,11 @@ const config: Config = {
         success: "#10B981",
         info: "#3B82F6",
         warning: "#F59E0B",
+        background: "#F6F6F6",
+        black: {
+          default: "#000000",
+          1:"#6B6B6B"
+        }
       },
     },
   },
