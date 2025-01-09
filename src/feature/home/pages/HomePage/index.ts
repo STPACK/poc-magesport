@@ -1,3 +1,5 @@
+"use client"
+
 import { HomePage } from "./HomePage";
 import { withHomePage } from "./withHomePage";
 

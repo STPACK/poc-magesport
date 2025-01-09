@@ -1,10 +1,6 @@
 import { RetailDetailType } from "@/feature/retailManagement/pages/RetailManagementPage/RetailManagementPage";
 
-export interface WithHomePageProps {
-  className?: string;
-}
-
-export interface HomePageProps {
+export interface RetailSlideProps {
   className?: string;
   retail: RetailDetailType[];
 }

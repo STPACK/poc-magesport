@@ -1,21 +1,21 @@
 import React from "react";
+import Link from "next/link";
+import { Link as ScrollLink } from "react-scroll";
 
 import { HeaderProps } from "./interface";
 import { cn } from "@/lib/util";
-import Link from "next/link";
 
 import { usePathname } from "next/navigation";
 
 export function Header({ className }: HeaderProps) {
   const pathname = usePathname();
 
-    const isActive = (path: string) => pathname === path;
-    
-    console.log(pathname)
+  const isActive = (path: string) => pathname === path;
+
   return (
     <header
       className={cn(
-        "flex justify-between px-[50px] py-[24px] items-center",
+        "flex justify-between px-[50px] py-[16px] items-center shadow-header ",
         className
       )}
     >
@@ -28,16 +28,33 @@ export function Header({ className }: HeaderProps) {
         </Link>
         <Link
           href="/tax-invoice"
-          className={cn("", { "text-black-1": isActive("/tax-invoice") })}
+          className={cn("", {
+            "text-black-1": isActive("/tax-invoice"),
+          })}
         >
           Tax Invoice
         </Link>
-        <Link
-          href="/#contact-us"
-          className={cn("", { "text-black-1": isActive("/#contact-us") })}
-        >
-          Contact Us
-        </Link>
+        {pathname === "/" ? (
+          <ScrollLink
+            to="contact-us"
+            smooth={true}
+            duration={500}
+            className={cn("", {
+              "text-black-1": isActive("/#contact-us"),
+            })}
+          >
+            <span className="cursor-pointer">Contact Us</span>
+          </ScrollLink>
+        ) : (
+          <Link
+            href="/#contact-us"
+            className={cn("", {
+              "text-black-1": isActive("/#contact-us"),
+            })}
+          >
+            Contact Us
+          </Link>
+        )}
       </div>
     </header>
   );

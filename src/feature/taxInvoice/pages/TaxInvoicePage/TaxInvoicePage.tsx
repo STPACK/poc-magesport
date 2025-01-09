@@ -5,7 +5,16 @@ import React, { useState } from "react";
 import { Input, List, Button, message } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { db } from "@/lib/firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
+
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  updateDoc,
+  arrayUnion,
+  doc,
+} from "firebase/firestore";
 
 interface UploadedFile {
   id: string;
@@ -55,6 +64,21 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
     }
   };
 
+  const handleDownload = async (file: UploadedFile) => {
+    try {
+      const fileDocRef = doc(db, "pdfFiles", file.id);
+      await updateDoc(fileDocRef, {
+        downloadDates: arrayUnion(Date.now()),
+      });
+
+      // Redirect to download the file
+      window.open(file.url, "_blank");
+    } catch (error) {
+      console.error("Error logging download date:", error);
+      message.error("Failed to log download date.");
+    }
+  };
+
   return (
     <div style={{ padding: "20px" }} className={className}>
       <h2>Search Files</h2>
@@ -82,10 +106,18 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
         bordered
         dataSource={searchResults}
         renderItem={(file) => (
-          <List.Item>
-            <a href={file.url} target="_blank" rel="noopener noreferrer">
-              {file.originalName}
-            </a>
+          <List.Item
+            actions={[
+              <Button
+                key={file.id}
+                type="link"
+                onClick={() => handleDownload(file)}
+              >
+                View/Download
+              </Button>,
+            ]}
+          >
+            <a>{file.originalName}</a>
           </List.Item>
         )}
         loading={loading}

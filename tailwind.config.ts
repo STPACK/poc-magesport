@@ -13,9 +13,13 @@ const config: Config = {
         warning: "#F59E0B",
         background: "#F6F6F6",
         black: {
-          default: "#000000",
-          1:"#6B6B6B"
-        }
+          DEFAULT: "#000000",
+          1: "#6B6B6B",
+          2: "#303030",
+        },
+      },
+      boxShadow: {
+        header: "0 2px 18px 0 rgba(129,162,182,.2)",
       },
     },
   },

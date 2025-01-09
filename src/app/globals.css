@@ -22,3 +22,8 @@ body {
   cursor: not-allowed;
   pointer-events: none;
 }
+
+
+.swiper-slide-active .shop-name{
+  opacity: 100;
+}
