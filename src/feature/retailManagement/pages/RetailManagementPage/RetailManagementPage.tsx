@@ -22,11 +22,11 @@ import ImgCrop from "antd-img-crop";
 
 const { Meta } = Card;
 
-interface RetailDetailType {
+export interface RetailDetailType {
   id: string;
   name: string;
   shopLink: string;
-  imageUrl?: string;
+  imageUrl: string;
 }
 
 export function RetailManagementPage({ className }: RetailManagementPageProps) {
