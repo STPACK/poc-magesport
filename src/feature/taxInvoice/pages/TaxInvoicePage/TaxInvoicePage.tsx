@@ -1,7 +1,7 @@
 import { TaxInvoicePageProps } from "./interface";
 
 import React, { useEffect, useState } from "react";
-import { List, Button, message, Spin, Empty } from "antd";
+import { Button, message, Spin, Empty } from "antd";
 
 import { db } from "@/lib/firebase";
 
