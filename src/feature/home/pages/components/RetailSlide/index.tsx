@@ -20,7 +20,7 @@ const Swiper = dynamic(() => import("swiper/react").then((mod) => mod.Swiper), {
 
 export function RetailSlide({ retail }: RetailSlideProps) {
   return (
-    <div className="relative max-w-[880px] mx-auto mt-[24px]">
+    <div className="relative max-w-[880px] mx-auto">
       <Swiper
         effect={"coverflow"}
         grabCursor={true}
@@ -56,7 +56,7 @@ export function RetailSlide({ retail }: RetailSlideProps) {
                 className="object-contain w-full aspect-[3/4]"
               />
             </div>
-            <div className="text-center mt-[50px] shop-name opacity-0">
+            <div className="text-center mt-[64px] shop-name opacity-0">
               <h3 className="text-[24px] font-semibold text-black-2 underline">
                 {item.name}
               </h3>
