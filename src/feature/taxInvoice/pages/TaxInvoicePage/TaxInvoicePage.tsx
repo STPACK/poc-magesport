@@ -1,6 +1,6 @@
 import { TaxInvoicePageProps } from "./interface";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Button, message, Spin, Empty } from "antd";
 
 import { db } from "@/lib/firebase";
@@ -15,9 +15,10 @@ import {
   doc,
 } from "firebase/firestore";
 import { SearchInput } from "@/components/SearchInput";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/lib/util";
+import { useQueryStrings } from "@/hooks/useQueryStrings";
+import { useGetQuery } from "@/hooks/useGetQuery";
 
 interface UploadedFile {
   id: string;
@@ -28,15 +29,19 @@ interface UploadedFile {
 }
 
 export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState("");
+  const { getStringParam } = useGetQuery();
+  const {
+    searchObj: { invoiceId },
+    updateQueryStrings,
+  } = useQueryStrings({
+    invoiceId: getStringParam("invoiceId"),
+  });
 
   async function getFiles(): Promise<UploadedFile[]> {
     const filesCollection = collection(db, "pdfFiles");
     const filesQuery = query(
       filesCollection,
-      where("originalName", "==", searchTerm)
+      where("originalName", "==", invoiceId)
     );
     const querySnapshot = await getDocs(filesQuery);
 
@@ -47,7 +52,7 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
         ...(doc.data() as Omit<UploadedFile, "id">),
       }))
       .filter((file) =>
-        file.originalName.toLowerCase().includes(searchTerm.toLowerCase())
+        file.originalName.toLowerCase().includes(invoiceId.toLowerCase())
       );
 
     return results as UploadedFile[];
@@ -69,29 +74,16 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
   };
 
   const { data, isError, isLoading } = useQuery({
-    queryKey: [searchTerm, "invoiceId"],
+    queryKey: [invoiceId, "invoiceId"],
     queryFn: getFiles,
-    enabled: !!searchTerm,
+    enabled: !!invoiceId,
   });
 
-  function handleSearch(value: string) {
-    const trimData = value.trim();
-    setSearchTerm(trimData);
-    const newQueryStrings = new URLSearchParams();
-    newQueryStrings.set("invoiceId", trimData);
-    router.replace(`?${newQueryStrings.toString()}`, {
-      scroll: false,
-    });
-  }
   useEffect(() => {
     if (isError) {
       message.error("Something went wrong. Please try again later.");
     }
   }, [isError]);
-
-  useEffect(() => {
-    setSearchTerm(searchParams.get("invoiceId") || "");
-  }, [searchParams]);
 
   return (
     <div className={cn("text-black-2", className)}>
@@ -99,8 +91,8 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
         <h1 className="text-[24px] font-bold mb-[16px]">ค้นหาใบกำกับภาษี</h1>
         <SearchInput
           placeholder="กรอกหมายเลขคำสั่งซื้อ"
-          value={searchTerm}
-          onChange={handleSearch}
+          value={invoiceId}
+          onChange={(value) => updateQueryStrings({ invoiceId: value.trim() })}
           className="mb-[18px]"
           disabled={isLoading}
         />
@@ -118,11 +110,11 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
           <div className="all-center h-[300px]">
             <Spin size="large" />
           </div>
-        ) : searchTerm ? (
+        ) : invoiceId ? (
           data && data.length > 0 ? (
             <div className="grid grid-cols-1 shadow-lg rounded-lg bg-white p-[48px] min-h-[300px]">
               <h3 className="text-[18px]">
-                หมายเลขคำสั่งซื้อ: <strong>{searchTerm}</strong>
+                หมายเลขคำสั่งซื้อ: <strong>{invoiceId}</strong>
               </h3>
               <div className="gird grid-cols-1 text-[14px] text-black-1 mt-[14px] divide-y">
                 {data.map((item, i) => (
