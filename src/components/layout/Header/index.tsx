@@ -32,29 +32,19 @@ export function Header({ className }: HeaderProps) {
             "text-black-1": isActive("/tax-invoice"),
           })}
         >
-          Tax Invoice
+          ใบกำกับภาษี
         </Link>
-        {pathname === "/" ? (
-          <ScrollLink
-            to="contact-us"
-            smooth={true}
-            duration={500}
-            className={cn("", {
-              "text-black-1": isActive("/#contact-us"),
-            })}
-          >
-            <span className="cursor-pointer">Contact Us</span>
-          </ScrollLink>
-        ) : (
-          <Link
-            href="/#contact-us"
-            className={cn("", {
-              "text-black-1": isActive("/#contact-us"),
-            })}
-          >
-            Contact Us
-          </Link>
-        )}
+
+        <ScrollLink
+          to="contact-us"
+          smooth={true}
+          duration={500}
+          className={cn("", {
+            "text-black-1": isActive("/#contact-us"),
+          })}
+        >
+          <span className="cursor-pointer">ติดต่อเรา</span>
+        </ScrollLink>
       </div>
     </header>
   );

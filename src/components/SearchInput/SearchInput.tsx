@@ -20,14 +20,14 @@ export function SearchInput({
   return (
     <label
       className={cn(
-        "rounded-[8px] shadow grid items-center gap-x-[8px] bg-white [&:has(input:focus)]:border-secondary-3 [&:has(input:focus)]:border border-white h-[48px] pl-[16px] grid-cols-[1fr_86px] relative",
+        "rounded-[8px] shadow grid items-center gap-x-[8px] bg-white [&:has(input:focus)]:border-secondary-3 [&:has(input:focus)]:border border-white h-[64px] pl-[16px] grid-cols-[1fr_86px] relative",
         className
       )}
     >
       <input
         ref={inputRef}
         className={cn(
-          "peer outline-none placeholder:text-gray-3 placeholder:text-[14px] focus:outline-none font-light w-full",
+          "peer outline-none text-[18px] placeholder:text-gray-3 placeholder:text-[18px] focus:outline-none w-full",
           inputClassName
         )}
         type="text"

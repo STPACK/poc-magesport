@@ -3,8 +3,10 @@ import React from "react";
 import { SearchInput } from "@/components/SearchInput";
 import { RetailSlide } from "../components/RetailSlide";
 import { HomePageProps } from "./interface";
+import { useRouter } from "next/navigation";
 
 export function HomePage({ retail }: HomePageProps) {
+  const router = useRouter();
   return (
     <div>
       <RetailSlide retail={retail} />
@@ -13,7 +15,7 @@ export function HomePage({ retail }: HomePageProps) {
         <SearchInput
           placeholder="กรอกหมายเลขคำสั่งซื้อ"
           value=""
-          onChange={(value) => console.log(value)}
+          onChange={(value) => router.push(`/tax-invoice?invoiceId=${value}`)}
           className="mb-[18px]"
         />
         <p className="mb-[4px]">
