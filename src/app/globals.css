@@ -23,7 +23,10 @@ body {
   pointer-events: none;
 }
 
-
-.swiper-slide-active .shop-name{
+.swiper-slide-active .shop-name {
   opacity: 100;
+}
+
+.swiper-slide-active.shop-image {
+  filter: blur(0px);
 }

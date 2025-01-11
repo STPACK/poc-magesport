@@ -13,6 +13,7 @@ export function SearchInput({
   handleClear,
   inputClassName,
   value,
+  onSearch,
   ...props
 }: SearchInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -40,6 +41,7 @@ export function SearchInput({
       />
       <button
         type="button"
+        disabled={props.disabled}
         className="hidden text-secondary-3 peer-[:not(:placeholder-shown)]:block absolute right-[100px]"
         onClick={() => {
           if (inputRef.current) {
@@ -51,8 +53,12 @@ export function SearchInput({
         <CloseCircleOutlined />
       </button>
 
-      <button className="bg-secondary-3 font-normal h-full rounded-r-[6px]">
-        <SearchOutlined style={{ fontSize: '24px', color: '#fff' }} />
+      <button
+        disabled={props.disabled}
+        onClick={onSearch}
+        className="bg-secondary-3 font-normal h-full rounded-r-[6px]"
+      >
+        <SearchOutlined style={{ fontSize: "24px", color: "#fff" }} />
       </button>
     </label>
   );

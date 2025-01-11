@@ -181,8 +181,8 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
 
     for (const file of fileList) {
       try {
-        const originalName = file.name.replace(/\.pdf$/i, "");
-        const uniqueFilename = `${Date.now()}_${originalName}`;
+        const fileName = file.name;
+        const uniqueFilename = `${Date.now()}_${fileName}`;
         const storageRef = ref(storage, `pdfs/${uniqueFilename}`);
 
         const snapshot = await uploadBytes(
@@ -195,7 +195,7 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
 
         await addDoc(collection(db, "pdfFiles"), {
           name: uniqueFilename,
-          originalName,
+          originalName:fileName.replace(/\.pdf$/i, ""),
           url: downloadURL,
           createdAt,
         });
@@ -396,6 +396,7 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
           onChange={(e) => setSearchTerm(e.target.value)}
           prefix={<SearchOutlined />}
           style={{ width: "30%", marginRight: "10px" }}
+          allowClear
         />
         <RangePicker size="large" onChange={(dates) => setDateRange(dates)} />
       </div>
