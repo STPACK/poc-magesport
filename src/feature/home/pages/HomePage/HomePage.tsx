@@ -6,7 +6,7 @@ import { ContactUs } from "@/components/ContactUs";
 
 export function HomePage({ retail }: HomePageProps) {
   return (
-    <div>
+    <div className="desktop:px-0 px-[16px]">
       <RetailSlide retail={retail} />
       <ContactUs className="mt-[100px]" />
     </div>

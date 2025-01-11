@@ -9,12 +9,12 @@ export function ContactUs({ className }: ContactUsProps) {
     <section
       id="contact-us"
       className={cn(
-        "mt-[48px] grid grid-cols-[400px_1fr] max-w-[1024px] mx-auto text-[14px] text-black-2",
+        "mt-[48px] mobile:mt-[24px] grid desktop:grid-cols-[400px_1fr] grid-cols-1 max-w-[1024px] mx-auto text-[14px] text-black-2",
         className
       )}
     >
       <div className="flex flex-col gap-[10px]">
-        <h2 className="text-[24px] font-bold">ติดต่อเรา</h2>
+        <h2 className="text-[24px] mobile:text-[16px] font-bold">ติดต่อเรา</h2>
         <Image src="/line-qr.webp" width={200} height={200} alt="logo" />
 
         <div>

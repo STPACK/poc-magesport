@@ -88,7 +88,7 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
   }, [isError]);
 
   return (
-    <div className={cn("text-black-2 max-w-[1024px] mx-auto", className)}>
+    <div className={cn("text-black-2 max-w-[1024px] mx-auto desktop:px-0 px-[16px]", className)}>
       <section className="mt-[56px] text-black-2 text-[14px]">
         <h1 className="text-[24px] font-bold mb-[16px]">ค้นหาใบกำกับภาษี</h1>
         <SearchInput
@@ -114,7 +114,7 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
           </div>
         ) : invoiceId ? (
           data && data.length > 0 ? (
-            <div className="grid grid-cols-1 shadow-lg rounded-lg bg-white px-[48px] py-[24px] min-h-[200px] content-start">
+            <div className="grid grid-cols-1 shadow-lg rounded-lg bg-white desktop:px-[48px] px-[24px] desktop:py-[24px] py-[16px]  content-start">
               <h3 className="text-[18px]">
                 หมายเลขคำสั่งซื้อ: <strong>{invoiceId}</strong>
               </h3>
@@ -138,12 +138,12 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
             </div>
           )
         ) : (
-          <div className="h-[200px]"></div>
+         null
         )}
       </div>
       <div className="my-[56px]">
         <h3 className=" text-[24px] font-bold text-center underline mb-[16px]">ตัวอย่างคำสั่งซื้อ</h3>
-        <div className="grid grid-cols-3 gap-[16px]">
+        <div className="grid desktop:grid-cols-3 grid-cols-1 gap-[16px]">
           <div className="relative w-full aspect-[150/30]">
             <Image src="/ex-tiktok.webp" alt="ex-tiktok" fill />
           </div>

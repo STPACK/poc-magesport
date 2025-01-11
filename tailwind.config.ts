@@ -4,6 +4,12 @@ const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
+      screens: {
+        mobile: { max: "767px" },
+        "mobile-tablet": { max: "1365px" },
+        tablet: { min: "768px", max: "1365px" },
+        desktop: { min: "1366px" },
+      },
       colors: {
         primary: "#1E40AF",
         secondary: {

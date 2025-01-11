@@ -16,7 +16,7 @@ export function Header({ className }: HeaderProps) {
   return (
     <header
       className={cn(
-        "flex justify-between px-[50px] py-[16px] items-center shadow-header ",
+        "flex justify-between desktop:px-[50px] px-[16px] py-[16px] items-center shadow-header ",
         className
       )}
     >
