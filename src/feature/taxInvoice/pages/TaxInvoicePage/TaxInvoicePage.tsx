@@ -19,6 +19,8 @@ import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/lib/util";
 import { useQueryStrings } from "@/hooks/useQueryStrings";
 import { useGetQuery } from "@/hooks/useGetQuery";
+import { ContactUs } from "@/components/ContactUs";
+import Image from "next/image";
 
 interface UploadedFile {
   id: string;
@@ -86,8 +88,8 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
   }, [isError]);
 
   return (
-    <div className={cn("text-black-2", className)}>
-      <section className="max-w-[980px] mx-auto mt-[56px] text-black-2 text-[14px]">
+    <div className={cn("text-black-2 max-w-[1024px] mx-auto", className)}>
+      <section className="mt-[56px] text-black-2 text-[14px]">
         <h1 className="text-[24px] font-bold mb-[16px]">ค้นหาใบกำกับภาษี</h1>
         <SearchInput
           placeholder="กรอกหมายเลขคำสั่งซื้อ"
@@ -105,14 +107,14 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
           ได้จากคำสั่งในช่องทาง Shopee Lazada Tiktok
         </p>
       </section>
-      <div className="mt-[24px] max-w-[980px] mx-auto ">
+      <div className="mt-[24px] w-full">
         {isLoading ? (
           <div className="all-center h-[300px]">
             <Spin size="large" />
           </div>
         ) : invoiceId ? (
           data && data.length > 0 ? (
-            <div className="grid grid-cols-1 shadow-lg rounded-lg bg-white p-[48px] min-h-[300px]">
+            <div className="grid grid-cols-1 shadow-lg rounded-lg bg-white px-[48px] py-[24px] min-h-[200px] content-start">
               <h3 className="text-[18px]">
                 หมายเลขคำสั่งซื้อ: <strong>{invoiceId}</strong>
               </h3>
@@ -120,10 +122,10 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
                 {data.map((item, i) => (
                   <div
                     key={i}
-                    className="grid grid-cols-[1fr_100px] gap-[8px] py-[10px] items-center"
+                    className="grid grid-cols-[1fr_100px] gap-[8px] py-[8px] items-center"
                   >
                     <div>{item.originalName}</div>
-                    <Button type="link" onClick={() => handleDownload(item)}>
+                    <Button className="underline" type="link" onClick={() => handleDownload(item)}>
                       Download
                     </Button>
                   </div>
@@ -131,14 +133,29 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
               </div>
             </div>
           ) : (
-            <div className="all-center h-[300px] shadow-lg rounded-lg bg-white">
+            <div className="all-center h-[200px] shadow-lg rounded-lg bg-white">
               <Empty description="ไม่พบคำสั่งซื้อนี้" />
             </div>
           )
         ) : (
-          <div className="h-[300px]"></div>
+          <div className="h-[200px]"></div>
         )}
       </div>
+      <div className="my-[56px]">
+        <h3 className=" text-[24px] font-bold text-center underline mb-[16px]">ตัวอย่างคำสั่งซื้อ</h3>
+        <div className="grid grid-cols-3 gap-[16px]">
+          <div className="relative w-full aspect-[150/30]">
+            <Image src="/ex-tiktok.webp" alt="ex-tiktok" fill />
+          </div>
+          <div className="relative w-full aspect-[150/30]">
+            <Image src="/ex-shopee.webp" alt="ex-shopee" fill />
+          </div>
+          <div className="relative w-full aspect-[150/30]">
+            <Image src="/ex-lazada.webp" alt="ex-lazada" fill />
+          </div>
+        </div>
+      </div>
+      <ContactUs />
     </div>
   );
 }

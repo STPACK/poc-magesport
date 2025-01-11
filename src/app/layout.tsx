@@ -7,8 +7,8 @@ import "./globals.css";
 import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
 
 export const metadata: Metadata = {
-  title: "Mage sports",
-  description: "",
+  title: "Mega Group",
+  description: "Mega Group- Brand Authorized Distributor - สินค้าลิขสิทธิ์แท้ จากตัวแทนจำหน่ายอย่างเป็นทางกา",
 };
 
 export default function RootLayout({

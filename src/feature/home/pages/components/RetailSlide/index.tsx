@@ -20,7 +20,7 @@ const Swiper = dynamic(() => import("swiper/react").then((mod) => mod.Swiper), {
 
 export function RetailSlide({ retail }: RetailSlideProps) {
   return (
-    <div className="relative max-w-[880px] mx-auto">
+    <div className="relative max-w-[1024px] mx-auto">
       <Swiper
         effect={"coverflow"}
         grabCursor={true}

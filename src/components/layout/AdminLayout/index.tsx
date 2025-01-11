@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { ProfileOutlined, PieChartOutlined } from "@ant-design/icons";
 
 import { useAuthentication } from "@/hooks/auth/useAuthentication";
+import Image from "next/image";
 
 const { Sider } = Layout;
 
@@ -41,8 +42,8 @@ export const AdminLayout = ({
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
-        <div className="w-full h-[64px] p-[8px]">
-          <div className="bg-slate-300 h-full aspect-square mx-auto all-center rounded-full">L</div>
+        <div className="w-full h-[64px] p-[16px] mb-[32px]">
+          <Image src="/logo.png" width={48} height={48} alt="logo" className="mx-auto" />
         </div>
         <Menu
           theme="dark"

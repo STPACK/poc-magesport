@@ -6,6 +6,7 @@ import { HeaderProps } from "./interface";
 import { cn } from "@/lib/util";
 
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 export function Header({ className }: HeaderProps) {
   const pathname = usePathname();
@@ -20,11 +21,11 @@ export function Header({ className }: HeaderProps) {
       )}
     >
       <Link href="/" className="text-[28px] font-semibold">
-        Mega Sport Group
+       <Image src="/logo.png" width={48} height={48} alt="logo" />
       </Link>
       <div className="flex gap-[16px] font-light">
         <Link href="/" className={cn("", { "text-black-1": isActive("/") })}>
-          Home
+          หน้าหลัก
         </Link>
         <Link
           href="/tax-invoice"

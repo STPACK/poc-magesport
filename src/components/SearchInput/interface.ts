@@ -14,4 +14,5 @@ export interface SearchInputProps
   handleKeyUp: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   handleClear: () => void;
+  onSearch: () => void;
 }

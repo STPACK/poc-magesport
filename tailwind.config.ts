@@ -9,7 +9,7 @@ const config: Config = {
         secondary: {
           1: "#FFEF2F",
           2: "#C568ED",
-          3: "#FF5734",
+          3: "#e60000",
           4: "#00E3FF",
           5: "#FF515D",
           6: "#00C894",

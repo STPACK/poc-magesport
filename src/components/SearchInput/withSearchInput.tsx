@@ -42,6 +42,10 @@ export function withSearchInput(Component: React.FC<SearchInputProps>) {
       }
     }
 
+    function onSearch() {
+      onChange(searchText);
+    }
+
     const componentProps: SearchInputProps = {
       ...props,
       value: searchText,
@@ -49,6 +53,7 @@ export function withSearchInput(Component: React.FC<SearchInputProps>) {
       handleKeyUp,
       handleKeyDown,
       handleClear,
+      onSearch,
     };
 
     return <Component {...componentProps} />;
