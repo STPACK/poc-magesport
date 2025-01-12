@@ -1,3 +1,4 @@
+import { Spin } from "antd";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -18,7 +19,11 @@ export function withAuthenGuard<P extends object>(Component: React.FC<P>) {
       return <Component {...props} />;
     }
 
-    return "loading";
+    return (
+      <div className="all-center my-[48px]">
+        <Spin size="large" />
+      </div>
+    );
   }
 
   return WithAuthenGuard;
