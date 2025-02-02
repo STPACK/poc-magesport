@@ -15,7 +15,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { SearchInput } from "@/components/SearchInput";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { cn } from "@/lib/util";
 import { useQueryStrings } from "@/hooks/useQueryStrings";
 import { useGetQuery } from "@/hooks/useGetQuery";
@@ -32,6 +32,7 @@ interface UploadedFile {
 
 export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
   const { getStringParam } = useGetQuery();
+
   const {
     searchObj: { invoiceId },
     updateQueryStrings,
@@ -69,11 +70,14 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
 
       // Redirect to download the file
       window.open(file.url, "_blank");
-    } catch (error) {
-      console.error("Error logging download date:", error);
-      message.error("Failed to log download date.");
+    } catch {
+      message.error("Something went wrong. Please try again later.");
     }
   };
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: handleDownload,
+  });
 
   const { data, isError, isLoading } = useQuery({
     queryKey: [invoiceId, "invoiceId"],
@@ -88,7 +92,12 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
   }, [isError]);
 
   return (
-    <div className={cn("text-black-2 max-w-[1024px] mx-auto desktop:px-0 px-[16px]", className)}>
+    <div
+      className={cn(
+        "text-black-2 max-w-[1024px] mx-auto desktop:px-0 px-[16px]",
+        className
+      )}
+    >
       <section className="mt-[56px] text-black-2 text-[14px]">
         <h1 className="text-[24px] font-bold mb-[16px]">ค้นหาใบกำกับภาษี</h1>
         <SearchInput
@@ -125,7 +134,12 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
                     className="grid grid-cols-[1fr_100px] gap-[8px] py-[8px] items-center"
                   >
                     <div>{item.originalName}</div>
-                    <Button className="underline" type="link" onClick={() => handleDownload(item)}>
+                    <Button
+                      disabled={isPending}
+                      className="underline"
+                      type="link"
+                      onClick={() => mutateAsync(item)}
+                    >
                       Download
                     </Button>
                   </div>
@@ -137,12 +151,12 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
               <Empty description="ไม่พบคำสั่งซื้อนี้" />
             </div>
           )
-        ) : (
-         null
-        )}
+        ) : null}
       </div>
       <div className="my-[56px]">
-        <h3 className=" text-[24px] font-bold text-center underline mb-[16px]">ตัวอย่างคำสั่งซื้อ</h3>
+        <h3 className=" text-[24px] font-bold text-center underline mb-[16px]">
+          ตัวอย่างคำสั่งซื้อ
+        </h3>
         <div className="grid desktop:grid-cols-3 grid-cols-1 gap-[16px]">
           <div className="relative w-full aspect-[150/30]">
             <Image src="/ex-tiktok.webp" alt="ex-tiktok" fill />
