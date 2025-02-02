@@ -1,7 +1,7 @@
 export interface WithTaxManagementPageProps {
-className?: string
+  className?: string;
 }
 
 export interface TaxManagementPageProps {
-className?: string
+  className?: string;
 }

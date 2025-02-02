@@ -42,29 +42,23 @@ import {
   deleteObject,
 } from "firebase/storage";
 import type { UploadFile } from "antd/es/upload/interface";
+import { EditModal } from "../../components/EditModal";
+import { UploadedFileType } from "@/interfaces/UploadedFileType";
 
 const { RangePicker } = DatePicker;
-
-interface UploadedFile {
-  id: string;
-  name: string;
-  originalName: string;
-  url: string;
-  createdAt: number;
-}
 
 export function TaxManagementPage({ className }: TaxManagementPageProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFileType[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   const [dateRange, setDateRange] = useState<
     [dayjs.Dayjs | null, dayjs.Dayjs | null] | null
   >(null);
-  const [editingFile, setEditingFile] = useState<UploadedFile | null>(null);
+  const [editingFile, setEditingFile] = useState<UploadedFileType | null>(null);
   const [newOriginalName, setNewOriginalName] = useState("");
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({ current: 1, total: 0 });
@@ -137,9 +131,9 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
       }
 
       const querySnapshot = await getDocs(filesQuery);
-      const files: UploadedFile[] = querySnapshot.docs.map((doc) => ({
+      const files: UploadedFileType[] = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...(doc.data() as Omit<UploadedFile, "id">),
+        ...(doc.data() as Omit<UploadedFileType, "id">),
       }));
 
       // Track the last visible document for the current page
@@ -195,7 +189,7 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
 
         await addDoc(collection(db, "pdfFiles"), {
           name: uniqueFilename,
-          originalName:fileName.replace(/\.pdf$/i, ""),
+          originalName: fileName.replace(/\.pdf$/i, ""),
           url: downloadURL,
           createdAt,
         });
@@ -214,7 +208,7 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
     setIsModalOpen(false);
   };
 
-  const handleDelete = (file: UploadedFile) => {
+  const handleDelete = (file: UploadedFileType) => {
     Modal.confirm({
       title: "Are you sure you want to delete this file?",
       content: `File: ${file.originalName}`,
@@ -238,7 +232,7 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
     });
   };
 
-  const openEditModal = (file: UploadedFile) => {
+  const openEditModal = (file: UploadedFileType) => {
     setEditingFile(file);
     setNewOriginalName(file.originalName);
     setEditModalOpen(true);
@@ -250,7 +244,7 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
     setNewOriginalName("");
   };
 
-  const handleEditSubmit = async () => {
+  const onEdit = async (value: string) => {
     if (!editingFile) return;
 
     try {
@@ -259,9 +253,7 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
 
       setUploadedFiles((prevFiles) =>
         prevFiles.map((file) =>
-          file.id === editingFile.id
-            ? { ...file, originalName: newOriginalName }
-            : file
+          file.id === editingFile.id ? { ...file, originalName: value } : file
         )
       );
       message.success("File name updated successfully!");
@@ -277,7 +269,7 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
     fetchFiles(pagination.current);
   };
 
-  const columns: TableColumnsType<UploadedFile> = [
+  const columns: TableColumnsType<UploadedFileType> = [
     {
       title: "File name",
       dataIndex: "originalName",
@@ -312,7 +304,7 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
       key: "actions",
       align: "right",
       width: 150,
-      render: (_: any, file: UploadedFile) => (
+      render: (_: any, file: UploadedFileType) => (
         <div>
           <Button
             icon={<EditOutlined />}
@@ -370,8 +362,15 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
           {uploading ? "Uploading..." : "Start Upload"}
         </Button>
       </Modal>
+      {editingFile?.originalName && (
+        <EditModal
+          onCancel={handleCancelEdit}
+          onSubmit={onEdit}
+          initialValue={editingFile?.originalName || ""}
+        />
+      )}
 
-      <Modal
+      {/* <Modal
         title="Edit file name"
         open={editModalOpen}
         onCancel={handleCancelEdit}
@@ -386,7 +385,7 @@ export function TaxManagementPage({ className }: TaxManagementPageProps) {
           onChange={(e) => setNewOriginalName(e.target.value)}
           autoFocus
         />
-      </Modal>
+      </Modal> */}
 
       <div style={{ marginBottom: "30px" }}>
         <Input
