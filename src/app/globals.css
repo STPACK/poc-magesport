@@ -30,3 +30,11 @@ body {
 .swiper-slide-active.shop-image {
   filter: blur(0px);
 }
+
+.toolbar-wrapper {
+  padding: 0px 24px;
+  color: #fff;
+  font-size: 24px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 100px;
+}

@@ -1,101 +1,32 @@
-import { TaxInvoicePageProps } from "./interface";
-
-import React, { useEffect } from "react";
-import { Button, message, Spin, Empty } from "antd";
-
-import { db } from "@/lib/firebase";
-
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-  updateDoc,
-  arrayUnion,
-  doc,
-} from "firebase/firestore";
-import { SearchInput } from "@/components/SearchInput";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { cn } from "@/lib/util";
-import { useQueryStrings } from "@/hooks/useQueryStrings";
-import { useGetQuery } from "@/hooks/useGetQuery";
-import { ContactUs } from "@/components/ContactUs";
+import React from "react";
 import Image from "next/image";
+import {
+  DownloadOutlined,
+  UndoOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined,
+} from "@ant-design/icons";
+import {  Spin, Empty, Image as ImageAnt, Space } from "antd";
 
-interface UploadedFile {
-  id: string;
-  name: string;
-  originalName: string;
-  url: string;
-  createdAt: number;
-}
+import { cn } from "@/lib/util";
+import { SearchInput } from "@/components/SearchInput";
+import { ContactUs } from "@/components/ContactUs";
+import { TaxInvoicePageProps } from "./interface";
+import Link from "next/link";
 
-export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
-  const { getStringParam } = useGetQuery();
-
-  const {
-    searchObj: { invoiceId },
-    updateQueryStrings,
-  } = useQueryStrings({
-    invoiceId: getStringParam("invoiceId"),
-  });
-
-  async function getFiles(): Promise<UploadedFile[]> {
-    const filesCollection = collection(db, "pdfFiles");
-    const filesQuery = query(
-      filesCollection,
-      where("originalName", "==", invoiceId)
-    );
-    const querySnapshot = await getDocs(filesQuery);
-
-    // Filter results based on `originalName` containing the search term
-    const results = querySnapshot.docs
-      .map((doc) => ({
-        id: doc.id,
-        ...(doc.data() as Omit<UploadedFile, "id">),
-      }))
-      .filter((file) =>
-        file.originalName.toLowerCase().includes(invoiceId.toLowerCase())
-      );
-
-    return results as UploadedFile[];
-  }
-
-  const handleDownload = async (file: UploadedFile) => {
-    try {
-      const fileDocRef = doc(db, "pdfFiles", file.id);
-      await updateDoc(fileDocRef, {
-        downloadDates: arrayUnion(Date.now()),
-      });
-
-      // Redirect to download the file
-      window.open(file.url, "_blank");
-    } catch {
-      message.error("Something went wrong. Please try again later.");
-    }
-  };
-
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: handleDownload,
-  });
-
-  const { data, isError, isLoading } = useQuery({
-    queryKey: [invoiceId, "invoiceId"],
-    queryFn: getFiles,
-    enabled: !!invoiceId,
-  });
-
-  useEffect(() => {
-    if (isError) {
-      message.error("Something went wrong. Please try again later.");
-    }
-  }, [isError]);
-
+export function TaxInvoicePage({
+  invoiceId,
+  updateQueryStrings,
+  isLoading,
+  data,
+  images,
+  onDownload,
+  setCurrent,
+}: TaxInvoicePageProps) {
   return (
     <div
       className={cn(
-        "text-black-2 max-w-[1024px] mx-auto desktop:px-0 px-[16px]",
-        className
+        "text-black-2 max-w-[1024px] mx-auto desktop:px-0 px-[16px]"
       )}
     >
       <section className="mt-[56px] text-black-2 text-[14px]">
@@ -134,14 +65,13 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
                     className="grid grid-cols-[1fr_100px] gap-[8px] py-[8px] items-center"
                   >
                     <div>{item.originalName}</div>
-                    <Button
-                      disabled={isPending}
-                      className="underline"
-                      type="link"
-                      onClick={() => mutateAsync(item)}
+                    <Link
+                      href={item.url}
+                      className="underline text-primary"
+                      target="_blank"
                     >
-                      Download
-                    </Button>
+                      Download PDF
+                    </Link>
                   </div>
                 ))}
               </div>
@@ -153,6 +83,34 @@ export function TaxInvoicePage({ className }: TaxInvoicePageProps) {
           )
         ) : null}
       </div>
+      {images.length > 0 && (
+        <div className="mt-[24px] desktop:w-[600px] w-[300px] mx-auto shadow-lg">
+          <ImageAnt.PreviewGroup
+            items={images}
+            preview={{
+              toolbarRender: (
+                _,
+                {
+                  transform: { scale },
+                  actions: { onZoomOut, onZoomIn, onReset },
+                }
+              ) => (
+                <Space size={20} className="toolbar-wrapper">
+                  <DownloadOutlined onClick={onDownload} />
+                  <ZoomOutOutlined disabled={scale === 1} onClick={onZoomOut} />
+                  <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn} />
+                  <UndoOutlined onClick={onReset} />
+                </Space>
+              ),
+              onChange: (index) => {
+                setCurrent(index);
+              },
+            }}
+          >
+            <ImageAnt width="auto" src={images[0]} />
+          </ImageAnt.PreviewGroup>
+        </div>
+      )}
       <div className="my-[56px]">
         <h3 className=" text-[24px] font-bold text-center underline mb-[16px]">
           ตัวอย่างคำสั่งซื้อ
