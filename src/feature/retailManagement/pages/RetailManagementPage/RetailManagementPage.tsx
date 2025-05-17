@@ -268,20 +268,12 @@ export function RetailManagementPage({ className }: RetailManagementPageProps) {
         </Form>
       </Modal>
 
-      <div
-        className="rounded-lg"
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "24px",
-          marginTop: "20px",
-        }}
-      >
+      <div className="rounded-lg max-w-[1024px] gap-[24px] mx-auto grid grid-cols-3">
         {retail.map((data) => (
           <Card
             key={data.id}
             hoverable
-            style={{ width: 320 }}
+            className="w-[320px]"
             cover={
               data.imageUrl ? (
                 <Image

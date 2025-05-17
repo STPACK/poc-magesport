@@ -4,7 +4,12 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { Layout, Menu, Button } from "antd";
 import { usePathname } from "next/navigation";
-import { ProfileOutlined, PieChartOutlined } from "@ant-design/icons";
+import {
+  ProfileOutlined,
+  PieChartOutlined,
+  AppstoreOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
 
 import { useAuthentication } from "@/hooks/auth/useAuthentication";
 import Image from "next/image";
@@ -22,14 +27,28 @@ const items = [
     icon: <ProfileOutlined />,
     label: <Link href="/admin-back-office/tax-management">Tax Management</Link>,
   },
+  {
+    key: "/admin-back-office/banner",
+    icon: <AppstoreOutlined />,
+    label: <Link href="/admin-back-office/banner">Banner</Link>,
+    children: [
+      {
+        key: "/admin-back-office/banner",
+        label: <Link href="/admin-back-office/banner">List</Link>,
+      },
+      {
+        key: "/admin-back-office/banner/management",
+        label: <Link href="/admin-back-office/banner/management">Management</Link>,
+      },
+    ],
+  },
 ];
 
 export const AdminLayout = ({
   children,
-  title,
 }: {
   children: React.ReactNode;
-  title: string;
+  title?: string;
 }) => {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
@@ -43,7 +62,13 @@ export const AdminLayout = ({
         onCollapse={(value) => setCollapsed(value)}
       >
         <div className="w-full h-[64px] p-[16px] mb-[32px]">
-          <Image src="/logo.png" width={48} height={48} alt="logo" className="mx-auto" />
+          <Image
+            src="/logo.png"
+            width={48}
+            height={48}
+            alt="logo"
+            className="mx-auto"
+          />
         </div>
         <Menu
           theme="dark"
@@ -58,8 +83,11 @@ export const AdminLayout = ({
           style={{ background: "white", padding: "16px 32px" }}
           className="all-center shadow-xl w-full border-b-2"
         >
-          <p className="text-[16px] font-medium">{title}</p>
-          <Button className="ml-auto" onClick={logout}>
+          <Button
+            icon={<LogoutOutlined />}
+            className="ml-auto"
+            onClick={logout}
+          >
             Logout
           </Button>
         </div>
