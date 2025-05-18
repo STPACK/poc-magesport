@@ -28,9 +28,9 @@ const items = [
     label: <Link href="/admin-back-office/tax-management">Tax Management</Link>,
   },
   {
-    key: "/admin-back-office/banner",
+    key: "banner",
     icon: <AppstoreOutlined />,
-    label: <Link href="/admin-back-office/banner">Banner</Link>,
+    label: "Banner",
     children: [
       {
         key: "/admin-back-office/banner",
