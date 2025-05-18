@@ -30,4 +30,5 @@ export interface BannerType {
   id: string;
   imageUrl: string;
   linkAreas: LinkAreaType[];
+  isActive: boolean;
 }

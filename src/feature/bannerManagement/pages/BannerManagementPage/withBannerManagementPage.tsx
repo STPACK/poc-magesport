@@ -55,6 +55,8 @@ export function withBannerManagementPage(
           imageUrl: downloadURL,
           linkAreas: values.linkAreas,
           createdAt: Timestamp.now(),
+          isActive: false,
+          order: null,
         });
         message.success("ข้อมูลถูกบันทึกเรียบร้อยแล้ว");
 

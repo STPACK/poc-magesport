@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Button, Modal, Upload, Card, Spin } from "antd";
+import { Button, Modal, Upload, Card, Spin, Empty } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import ImgCrop from "antd-img-crop";
 import { BannerManagementPageProps } from "./interface";
@@ -23,7 +23,7 @@ export function BannerManagementPage({
 }: BannerManagementPageProps) {
   return (
     <div>
-      <div className="flex items-center justify-between mb-[32px]">
+      <div className="flex items-start justify-between mb-[32px]">
         <p className="text-[32px] font-semibold">Banner Management</p>
         <ImgCrop
           aspect={6.5 / 3}
@@ -37,7 +37,7 @@ export function BannerManagementPage({
             accept="image/*"
           >
             <Button type="primary" size="large">
-              Add banner
+              Create Banner
             </Button>
           </Upload>
         </ImgCrop>
@@ -67,6 +67,29 @@ export function BannerManagementPage({
           <div className="my-[50px] all-center">
             <Spin size="large" />
           </div>
+        ) : images.length === 0 ? (
+          <Empty
+            description={
+              <span className="text-gray-2">ไม่มี Banner ที่พร้อมใช้งาน</span>
+            }
+          >
+            <ImgCrop
+              aspect={6.5 / 3}
+              quality={1}
+              modalTitle="Crop Image"
+              modalWidth={800}
+            >
+              <Upload
+                beforeUpload={handleBeforeUpload}
+                showUploadList={false}
+                accept="image/*"
+              >
+                <Button type="primary" >
+                  Create Banner
+                </Button>
+              </Upload>
+            </ImgCrop>
+          </Empty>
         ) : (
           <div
             style={{
@@ -90,6 +113,7 @@ export function BannerManagementPage({
                     variant="text"
                     color="danger"
                     onClick={() => setConfirmingId(image.id)}
+                    disabled={image.isActive}
                   >
                     <DeleteOutlined />
                   </Button>,
