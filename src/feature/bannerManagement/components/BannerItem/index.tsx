@@ -13,6 +13,7 @@ import {
   ArrowUpOutlined,
 } from "@ant-design/icons";
 import { BannerItemProps } from "./interface";
+import { cn } from "@/lib/util";
 
 export function BannerItem({
   data,
@@ -96,7 +97,9 @@ export function BannerItem({
         {...getReferenceProps()}
       >
         <div
-          className="relative w-full border-2 group-hover:border-blue-500 "
+          className={cn("relative w-full border-2", {
+            "border-blue-500 ": isOpen,
+          })}
           style={{
             paddingTop: `${(3 / 6.5) * 100}%`,
           }}
