@@ -38,9 +38,16 @@ const items = [
       },
       {
         key: "/admin-back-office/banner/management",
-        label: <Link href="/admin-back-office/banner/management">Management</Link>,
+        label: (
+          <Link href="/admin-back-office/banner/management">Management</Link>
+        ),
       },
     ],
+  },
+  {
+    key: "/admin-back-office/partner",
+    icon: <ProfileOutlined />,
+    label: <Link href="/admin-back-office/partner">Partner</Link>,
   },
 ];
 
