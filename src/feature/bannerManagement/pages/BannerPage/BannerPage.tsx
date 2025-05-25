@@ -26,7 +26,9 @@ export function BannerPage({
       <div className="flex items-start justify-between">
         <div className="text-[32px] font-semibold">Banner</div>
         <Button size="large" type="primary">
-          <Link href="/admin-back-office/banner/management">จัดการ Banner</Link>
+          <Link href="/admin-back-office/banner/management">
+            Banner Management
+          </Link>
         </Button>
       </div>
       <div className="mt-[24px] grid grid-cols-[375px_375px] gap-[24px] mx-auto w-fit">
@@ -46,23 +48,21 @@ export function BannerPage({
             ) : activeLinks.length === 0 ? (
               <Empty
                 description={
-                  <span className="text-gray-2">
-                    ไม่มี Banner ที่เปิดใช้งาน
-                  </span>
+                  <span className="text-gray-2">No Active Banner</span>
                 }
               >
                 <button
                   onClick={() => setIsModalOpen(true)}
                   className="text-gray-2 underline cursor-pointer hover:text-blue-500 my-2"
                 >
-                  เพิ่มจาก Banner ที่ยังไม่เปิดใช้งาน
+                  Select More Banner
                 </button>
                 <p className="text-gray-2">&</p>
                 <Link
                   href="/admin-back-office/banner/management"
                   className="underline"
                 >
-                  ไปหน้าจัดการเพื่อ สร้าง Banner ใหม่
+                  Go to Banner Management to create new Banner
                 </Link>
               </Empty>
             ) : (
@@ -91,7 +91,7 @@ export function BannerPage({
             className="w-full"
             disabled={isLoading}
           >
-            + เพิ่มจาก Banner ที่ยังไม่เปิดใช้งาน
+            + Select More Banner
           </Button>
 
           <div className="flex justify-end gap-4 pt-4">
@@ -108,14 +108,14 @@ export function BannerPage({
               type="primary"
               onClick={handleSave}
             >
-              บันทึก
+              Save
             </Button>
           </div>
         </div>
       </div>
 
       <Modal
-        title="เลือก Banner ที่ไม่ active"
+        title="Select More Banner"
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         footer={null}
@@ -125,16 +125,14 @@ export function BannerPage({
             <div className="col-span-2 my-[24px]">
               <Empty
                 description={
-                  <span className="text-gray-2">
-                    ไม่มี Banner ที่ไม่ active
-                  </span>
+                  <span className="text-gray-2">No More Banner</span>
                 }
               >
                 <Link
                   href="/admin-back-office/banner/management"
                   className="underline"
                 >
-                  ไปหน้าจัดการเพื่อ สร้าง Banner ใหม่
+                  Go to Banner Management to create new Banner
                 </Link>
               </Empty>
             </div>

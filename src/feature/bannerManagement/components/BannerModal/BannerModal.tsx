@@ -39,7 +39,7 @@ export const BannerModal: React.FC<BannerModalProps> = ({
 }) => {
   return (
     <Modal
-      title={<p className="text-[20px]">Edit Hotspots</p>}
+      title={<p className="text-[20px]">Edit Banner</p>}
       open={visible}
       onCancel={onCancel}
       footer={null}
@@ -154,10 +154,10 @@ export const BannerModal: React.FC<BannerModalProps> = ({
                                     {...field}
                                     autoComplete="off"
                                     disabled={isSubmitting}
-                                    placeholder="เพิ่มลิงก์"
+                                    placeholder="Add link here"
                                     onFocus={() => setSelectedId(area.id)}
                                     status={
-                                      errors.linkAreas?.[index]?.link &&
+                                      errors.linkAreas?.[index] &&
                                       touched.linkAreas?.[index]?.link
                                         ? "error"
                                         : ""
@@ -174,7 +174,7 @@ export const BannerModal: React.FC<BannerModalProps> = ({
                                 </div>
                               )}
                             </Field>
-                            <Tooltip title="แสดง">
+                            <Tooltip title="View">
                               <Button
                                 shape="circle"
                                 icon={<EyeOutlined />}
@@ -183,7 +183,7 @@ export const BannerModal: React.FC<BannerModalProps> = ({
                                 disabled={isSubmitting}
                               />
                             </Tooltip>
-                            <Tooltip title="ลบ">
+                            <Tooltip title="Delete">
                               <Button
                                 shape="circle"
                                 icon={<DeleteOutlined />}
@@ -232,7 +232,7 @@ export const BannerModal: React.FC<BannerModalProps> = ({
                             setSelectedId(newArea.id);
                           }}
                         >
-                          + เพิ่มจุดใส่ลิงก์({values.linkAreas.length}/
+                          + Add Link Area({values.linkAreas.length}/
                           {MAX_LINKS})
                         </button>
                       </>

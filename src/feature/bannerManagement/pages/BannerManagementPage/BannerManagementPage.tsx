@@ -70,7 +70,7 @@ export function BannerManagementPage({
         ) : images.length === 0 ? (
           <Empty
             description={
-              <span className="text-gray-2">ไม่มี Banner ที่พร้อมใช้งาน</span>
+              <span className="text-gray-2">No Banner</span>
             }
           >
             <ImgCrop
@@ -156,13 +156,13 @@ export function BannerManagementPage({
       </div>
       <Modal
         open={!!confirmingId}
-        title="ยืนยันการลบ"
+        title="Confirm Delete"
         onOk={() => confirmingId && handleDelete(confirmingId)}
         onCancel={() => setConfirmingId(null)}
-        okText="ลบ"
-        cancelText="ยกเลิก"
+        okText="Delete"
+        cancelText="Cancel"
       >
-        <p>คุณแน่ใจหรือไม่ว่าต้องการลบภาพนี้?</p>
+        <p>Confirm to Delete This Banner?</p>
       </Modal>
     </div>
   );
