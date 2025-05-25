@@ -1,9 +1,7 @@
 import { PartnerPageProps } from "./interface";
 import React from "react";
-import { Modal, Button, Form, Input, Upload, Card } from "antd";
-import {
-  UploadOutlined,
-} from "@ant-design/icons";
+import { Modal, Button, Form, Input, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 
 import ImgCrop from "antd-img-crop";
 import { PartnerList } from "./components/PartnerList";
@@ -118,38 +116,6 @@ export function PartnerPage({
         showModal={showModal}
         handleDelete={handleDelete}
       />
-
-      {/* <div className="rounded-lg max-w-[1024px] gap-[16px] mx-auto grid grid-cols-6">
-        {partner.map((data) => (
-          <Card
-            key={data.id}
-            hoverable
-            className="w-full"
-            styles={{ body: { display: "hidden", padding: "0" } }}
-            cover={
-              <div className="p-2">
-                <div className="relative w-full aspect-square">
-                  {data.imageUrl ? (
-                    <Image
-                      alt={data.alt}
-                      src={data.imageUrl}
-                      fill
-                      className="object-cover "
-                    />
-                  ) : null}
-                </div>
-              </div>
-            }
-            actions={[
-              <EditOutlined key="edit" onClick={() => showModal(data)} />,
-              <DeleteOutlined
-                key="delete"
-                onClick={() => handleDelete(data.id)}
-              />,
-            ]}
-          ></Card>
-        ))}
-      </div> */}
     </div>
   );
 }
