@@ -1,13 +1,12 @@
 import { PartnerPageProps } from "./interface";
 import React from "react";
-import { Modal, Button, Form, Input, Upload, Card, Image } from "antd";
+import { Modal, Button, Form, Input, Upload, Card } from "antd";
 import {
   UploadOutlined,
-  EditOutlined,
-  DeleteOutlined,
 } from "@ant-design/icons";
 
 import ImgCrop from "antd-img-crop";
+import { PartnerList } from "./components/PartnerList";
 
 export function PartnerPage({
   showModal,
@@ -22,6 +21,7 @@ export function PartnerPage({
   partner,
   handleDelete,
   form,
+  handleDragEnd,
 }: PartnerPageProps) {
   return (
     <div>
@@ -46,7 +46,7 @@ export function PartnerPage({
           form={form}
           layout="vertical"
           onFinish={handleFinish}
-          initialValues={{ alt: "", imageUrl: "" }}
+          initialValues={{ alt: "", imageUrl: "", order: partner.length + 1 }}
           className="flex flex-col"
         >
           <Form.Item
@@ -112,25 +112,32 @@ export function PartnerPage({
         </Form>
       </Modal>
 
-      <div className="rounded-lg max-w-[1024px] gap-[16px] mx-auto grid grid-cols-6">
+      <PartnerList
+        handleDragEnd={handleDragEnd}
+        partner={partner}
+        showModal={showModal}
+        handleDelete={handleDelete}
+      />
+
+      {/* <div className="rounded-lg max-w-[1024px] gap-[16px] mx-auto grid grid-cols-6">
         {partner.map((data) => (
           <Card
             key={data.id}
             hoverable
             className="w-full"
-            styles={{ body: { display: "hidden",padding:"0" } }}
+            styles={{ body: { display: "hidden", padding: "0" } }}
             cover={
               <div className="p-2">
-                {data.imageUrl ? (
-                  <Image
-                    alt={data.alt}
-                    src={data.imageUrl}
-                    style={{
-                      aspectRatio: "1",
-                      objectFit: "cover",
-                    }}
-                  />
-                ) : null}
+                <div className="relative w-full aspect-square">
+                  {data.imageUrl ? (
+                    <Image
+                      alt={data.alt}
+                      src={data.imageUrl}
+                      fill
+                      className="object-cover "
+                    />
+                  ) : null}
+                </div>
               </div>
             }
             actions={[
@@ -142,7 +149,7 @@ export function PartnerPage({
             ]}
           ></Card>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }

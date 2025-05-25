@@ -12,6 +12,8 @@ import {
   doc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { DragEndEvent } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 
 export function withPartnerPage(Component: React.FC<PartnerPageProps>) {
   function WithPartnerPage() {
@@ -23,14 +25,15 @@ export function withPartnerPage(Component: React.FC<PartnerPageProps>) {
     const [editPartner, setEditPartner] = useState<PartnerType | null>(null);
     const [form] = Form.useForm();
 
+    const fetchPartner = async () => {
+      const querySnapshot = await getDocs(collection(db, "partners"));
+      const partnerData = querySnapshot.docs.map(
+        (doc) => ({ id: doc.id, ...doc.data() } as PartnerType)
+      );
+      partnerData.sort((a, b) => a.order - b.order);
+      setPartner(partnerData);
+    };
     useEffect(() => {
-      const fetchPartner = async () => {
-        const querySnapshot = await getDocs(collection(db, "partners"));
-        const partnerData = querySnapshot.docs.map(
-          (doc) => ({ id: doc.id, ...doc.data() } as PartnerType)
-        );
-        setPartner(partnerData);
-      };
       fetchPartner();
     }, []);
 
@@ -57,7 +60,7 @@ export function withPartnerPage(Component: React.FC<PartnerPageProps>) {
       setEditPartner(null);
     };
 
-    const handleFinish = async (values: {  alt: string }) => {
+    const handleFinish = async (values: PartnerType) => {
       setLoading(true);
       let finalImageUrl = editPartner?.imageUrl || "";
 
@@ -72,43 +75,28 @@ export function withPartnerPage(Component: React.FC<PartnerPageProps>) {
         if (editPartner) {
           const partnerRef = doc(db, "partners", editPartner.id);
           await updateDoc(partnerRef, {
+            order: editPartner.order,
             alt: values.alt,
             imageUrl: finalImageUrl,
           });
-          setPartner((prev) =>
-            prev.map((item) =>
-              item.id === editPartner.id
-                ? {
-                    ...item,
-                    alt: values.alt,
-                    imageUrl: finalImageUrl,
-                  }
-                : item
-            )
-          );
           message.success("Partner updated successfully!");
         } else {
-          const docRef = await addDoc(collection(db, "partners"), {
+          await addDoc(collection(db, "partners"), {
             alt: values.alt,
             imageUrl: finalImageUrl,
+            order: partner[partner.length - 1]?.order + 1 || 1,
           });
-          setPartner((prev) => [
-            {
-              id: docRef.id,
-              alt: values.alt,
-              imageUrl: finalImageUrl,
-            },
-            ...prev,
-          ]);
+
           message.success("Partner created successfully!");
         }
+        await fetchPartner();
         handleCancel();
       } catch (error) {
         message.error("Error saving partner.");
         console.error("Error:", error);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     const handleFileChange = (file: File) => {
@@ -132,7 +120,7 @@ export function withPartnerPage(Component: React.FC<PartnerPageProps>) {
         onOk: async () => {
           try {
             await deleteDoc(doc(db, "partners", id));
-            setPartner((prev) => prev.filter((user) => user.id !== id));
+            await fetchPartner();
             message.success("Partner deleted successfully!");
           } catch (error) {
             message.error("Error deleting partner.");
@@ -141,6 +129,28 @@ export function withPartnerPage(Component: React.FC<PartnerPageProps>) {
         },
       });
     };
+
+    async function handleDragEnd(event: DragEndEvent) {
+      const { active, over } = event;
+      if (!over || active.id === over.id) return;
+
+      const oldIndex = partner.findIndex((item) => item.id === active.id);
+      const newIndex = partner.findIndex((item) => item.id === over.id);
+      const newItems = arrayMove(partner, oldIndex, newIndex);
+
+      // รีเซ็ต order และอัปเดต Firestore
+      const updatedItems = newItems.map((item, index) => ({
+        ...item,
+        order: index,
+      }));
+      setPartner(updatedItems);
+
+      for (const item of updatedItems) {
+        await updateDoc(doc(db, "partners", item.id), {
+          order: item.order,
+        });
+      }
+    }
     const newProps = {
       form,
       setImageUrl,
@@ -154,6 +164,7 @@ export function withPartnerPage(Component: React.FC<PartnerPageProps>) {
       editPartner,
       isModalOpen,
       handleCancel,
+      handleDragEnd,
     };
     return <Component {...newProps} />;
   }
