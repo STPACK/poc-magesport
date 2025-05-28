@@ -19,23 +19,17 @@ export function Header({ className }: HeaderProps) {
 
   const isActive = (path: string) => pathname === path;
 
-  const itemClass = "flex-col all-center px-3";
-  const activeClass = "text-info border-b-2 border-info";
-  const linkClass = cn("flex-col all-center px-3 cursor-pointer", {
-    "text-info border-b-2 border-info": isActive("/"),
-  });
-
   return (
     <header
       className={cn(
-        "flex justify-between desktop:px-[50px] px-[16px] h-[80px] items-center shadow-header ",
+        "sticky top-0 z-50 bg-white flex justify-between desktop:px-[50px] px-[16px] h-[64px] items-center shadow-header ",
         className
       )}
     >
       <Link href="/" className="text-[28px] font-semibold">
         <Image src="/logo.png" width={48} height={48} alt="logo" />
       </Link>
-      <div className="flex h-[80px] gap-[24px] font-light mobile-tablet:text-[12px] mobile-tablet:gap-[16px]">
+      <div className="flex h-[64px] gap-[24px] font-light mobile-tablet:text-[12px] mobile-tablet:gap-[16px]">
         <Link
           href="/"
           className={cn("flex-col all-center px-3 mobile-tablet:px-1", {
@@ -45,13 +39,16 @@ export function Header({ className }: HeaderProps) {
           <HomeOutlined />
           Home
         </Link>
-         <ScrollLink
-          to="contact-us"
+        <ScrollLink
+          to="sales-channels"
           smooth={true}
           duration={500}
-          className={cn("flex-col all-center cursor-pointer px-3 mobile-tablet:px-1", {
-            "text-info border-b-2 border-info": isActive("/#sales-channels"),
-          })}
+          className={cn(
+            "flex-col all-center cursor-pointer px-3 mobile-tablet:px-1",
+            {
+              "text-info border-b-2 border-info": isActive("/#sales-channels"),
+            }
+          )}
         >
           <ShoppingCartOutlined />
           Channels
@@ -69,9 +66,12 @@ export function Header({ className }: HeaderProps) {
           to="contact-us"
           smooth={true}
           duration={500}
-          className={cn("flex-col all-center cursor-pointer px-3 mobile-tablet:px-1", {
-            "text-info border-b-2 border-info": isActive("/#contact-us"),
-          })}
+          className={cn(
+            "flex-col all-center cursor-pointer px-3 mobile-tablet:px-1",
+            {
+              "text-info border-b-2 border-info": isActive("/#contact-us"),
+            }
+          )}
         >
           <MailOutlined />
           Contact Us
