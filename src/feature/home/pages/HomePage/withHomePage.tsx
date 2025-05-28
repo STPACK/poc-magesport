@@ -9,14 +9,14 @@ export function withHomePage(Component: React.FC<HomePageProps>) {
     const [retail, setRetail] = useState<RetailDetailType[]>([]);
 
     useEffect(() => {
-      const fetchUsers = async () => {
+      const fetchRetail = async () => {
         const querySnapshot = await getDocs(collection(db, "retail"));
         const retailData = querySnapshot.docs.map(
           (doc) => ({ id: doc.id, ...doc.data() } as RetailDetailType)
         );
         setRetail(retailData);
       };
-      fetchUsers();
+      fetchRetail();
     }, []);
     const newProps = {
       retail,
