@@ -57,7 +57,7 @@ export function PartnerPage({
               },
             ]}
           >
-            <ImgCrop aspect={1}>
+            <ImgCrop aspect={1} fillColor="transparent">
               <Upload
                 beforeUpload={(file) => {
                   handleFileChange(file);

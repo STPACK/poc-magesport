@@ -56,6 +56,7 @@ export function withBannerPage(Component: React.FC<BannerPageProps>) {
         setIsLoading(false);
       }
     }
+    
     useEffect(() => {
       const handleBeforeUnload = (e: BeforeUnloadEvent) => {
         if (isDirty) {
