@@ -22,22 +22,27 @@ export function PartnerList({ className }: PartnerListProps) {
   }, []);
 
   return (
-    <section
-      className={cn(
-        "max-w-[1024px] flex justify-center flex-wrap gap-[8px] mx-auto",
-        className
-      )}
-    >
-      {partners.map((partner) => (
-        <div key={partner.id} className="w-[56px] mobile-tablet:w-[42px] aspect-square relative">
-          <Image
-            alt={partner.alt || "Partner Image"}
-            src={partner.imageUrl}
-            className="object-cover"
-            fill
-          />
-        </div>
-      ))}
-    </section>
+    partners.length > 0 && (
+      <section
+        className={cn(
+          "max-w-[1024px] flex justify-center flex-wrap gap-[8px] mx-auto",
+          className
+        )}
+      >
+        {partners.map((partner) => (
+          <div
+            key={partner.id}
+            className="w-[56px] mobile-tablet:w-[42px] aspect-square relative"
+          >
+            <Image
+              alt={partner.alt || "Partner Image"}
+              src={partner.imageUrl}
+              className="object-cover"
+              fill
+            />
+          </div>
+        ))}
+      </section>
+    )
   );
 }

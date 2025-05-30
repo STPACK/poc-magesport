@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  collection,
-  getDocs,
-  orderBy,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 import { BannerListProps } from "./interface";
@@ -14,11 +8,9 @@ import { BannerType } from "@/feature/bannerManagement/pages/BannerManagementPag
 import Image from "next/image";
 
 export function BannerList({ className }: BannerListProps) {
-  const [isLoading, setIsLoading] = useState(false);
   const [banners, setBanners] = useState<BannerType[]>([]);
   async function fetchData() {
     try {
-      setIsLoading(true);
       const colRef = collection(db, "banner");
       const activeSnap = await getDocs(
         query(colRef, where("isActive", "==", true), orderBy("order", "asc"))
@@ -29,8 +21,6 @@ export function BannerList({ className }: BannerListProps) {
       setBanners(active);
     } catch (error) {
       console.error("Error fetching data: ", error);
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -38,7 +28,13 @@ export function BannerList({ className }: BannerListProps) {
     fetchData();
   }, []);
   return (
-    <section id="sales-channels" className={cn("grid grid-cols-1 gap-[16px] max-w-[1024px] mx-auto", className)}>
+    <section
+      id="sales-channels"
+      className={cn(
+        "grid grid-cols-1 gap-[16px] max-w-[1024px] mx-auto",
+        className
+      )}
+    >
       {banners.map((image) => (
         <div key={image.id} style={{ position: "relative" }}>
           <div
