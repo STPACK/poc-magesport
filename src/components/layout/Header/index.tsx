@@ -1,6 +1,12 @@
 import React from "react";
 import Link from "next/link";
 import { Link as ScrollLink } from "react-scroll";
+import {
+  BankOutlined,
+  ShoppingCartOutlined,
+  HomeOutlined,
+  MailOutlined,
+} from "@ant-design/icons";
 
 import { HeaderProps } from "./interface";
 import { cn } from "@/lib/util";
@@ -16,35 +22,59 @@ export function Header({ className }: HeaderProps) {
   return (
     <header
       className={cn(
-        "flex justify-between desktop:px-[50px] px-[16px] py-[16px] items-center shadow-header ",
+        "sticky top-0 z-50 bg-white flex justify-between desktop:px-[50px] px-[16px] h-[64px] items-center shadow-header ",
         className
       )}
     >
       <Link href="/" className="text-[28px] font-semibold">
-       <Image src="/logo.png" width={48} height={48} alt="logo" />
+        <Image src="/logo.png" width={48} height={48} alt="logo" />
       </Link>
-      <div className="flex gap-[16px] font-light">
-        <Link href="/" className={cn("", { "text-black-1": isActive("/") })}>
-          หน้าหลัก
-        </Link>
+      <div className="flex h-[64px] gap-[24px] font-light mobile-tablet:text-[12px] mobile-tablet:gap-[16px]">
         <Link
-          href="/tax-invoice"
-          className={cn("", {
-            "text-black-1": isActive("/tax-invoice"),
+          href="/"
+          className={cn("flex-col all-center px-3 mobile-tablet:px-1", {
+            "text-info border-b-2 border-info": isActive("/"),
           })}
         >
-          ใบกำกับภาษี
+          <HomeOutlined />
+          Home
         </Link>
-
+        <ScrollLink
+          to="sales-channels"
+          smooth={true}
+          duration={500}
+          className={cn(
+            "flex-col all-center cursor-pointer px-3 mobile-tablet:px-1",
+            {
+              "text-info border-b-2 border-info": isActive("/#sales-channels"),
+            }
+          )}
+        >
+          <ShoppingCartOutlined />
+          Channels
+        </ScrollLink>
+        <Link
+          href="/tax-invoice"
+          className={cn("flex-col all-center px-3 mobile-tablet:px-1", {
+            "text-info border-b-2 border-info": isActive("/tax-invoice"),
+          })}
+        >
+          <BankOutlined />
+          Tax
+        </Link>
         <ScrollLink
           to="contact-us"
           smooth={true}
           duration={500}
-          className={cn("", {
-            "text-black-1": isActive("/#contact-us"),
-          })}
+          className={cn(
+            "flex-col all-center cursor-pointer px-3 mobile-tablet:px-1",
+            {
+              "text-info border-b-2 border-info": isActive("/#contact-us"),
+            }
+          )}
         >
-          <span className="cursor-pointer">ติดต่อเรา</span>
+          <MailOutlined />
+          Contact Us
         </ScrollLink>
       </div>
     </header>
