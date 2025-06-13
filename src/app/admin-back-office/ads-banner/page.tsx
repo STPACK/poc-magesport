@@ -3,7 +3,7 @@ import { RetailManagementPage } from "@/feature/retailManagement/pages/RetailMan
 
 export default function RetailStore() {
   return (
-    <AdminLayout title="Retail Store Management">
+    <AdminLayout>
       <RetailManagementPage />
     </AdminLayout>
   );

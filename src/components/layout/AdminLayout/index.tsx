@@ -18,9 +18,9 @@ const { Sider } = Layout;
 
 const items = [
   {
-    key: "/admin-back-office/retail-store",
+    key: "/admin-back-office/ads-banner",
     icon: <PieChartOutlined />,
-    label: <Link href="/admin-back-office/retail-store">Retail Store</Link>,
+    label: <Link href="/admin-back-office/ads-banner">Ads banner </Link>,
   },
   {
     key: "/admin-back-office/tax-management",
