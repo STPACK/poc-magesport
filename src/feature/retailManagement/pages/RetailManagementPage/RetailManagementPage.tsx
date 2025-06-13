@@ -166,16 +166,16 @@ export function RetailManagementPage({ className }: RetailManagementPageProps) {
   return (
     <div className={className}>
       <div className="flex items-center justify-between mb-[32px]">
-        <p className="text-[32px] font-semibold">Retail Store Management</p>
+        <p className="text-[32px] font-semibold">Ads Banner Management</p>
         <Button type="primary" onClick={() => showModal()} size="large">
-          Add Retail Store
+          Add Ads Banner
         </Button>
       </div>
 
       <Modal
         title={
           <p className="text-[24px] font-medium mb-[14px]">
-            {editRetail ? "Edit Retail" : "Create New Retail"}
+            {editRetail ? "Edit Ads Banner" : "Create Ads Banner"}
           </p>
         }
         open={isModalOpen}
@@ -234,23 +234,11 @@ export function RetailManagementPage({ className }: RetailManagementPageProps) {
             </ImgCrop>
           </Form.Item>
 
-          <Form.Item
-            label="Retail Name"
-            name="name"
-            rules={[
-              { required: true, message: "Please enter the retail name" },
-            ]}
-          >
+          <Form.Item label="Ads title" name="name">
             <Input />
           </Form.Item>
 
-          <Form.Item
-            label="Retail Link"
-            name="shopLink"
-            rules={[
-              { required: true, message: "Please enter the retail link" },
-            ]}
-          >
+          <Form.Item label="Ads Link" name="shopLink">
             <Input />
           </Form.Item>
 
@@ -296,7 +284,7 @@ export function RetailManagementPage({ className }: RetailManagementPageProps) {
             ]}
           >
             <Meta
-              title={data.name}
+              title={data.name||"-"}
               description={
                 <a href={data.shopLink} target="_blank">
                   {data.shopLink}
