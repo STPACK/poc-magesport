@@ -18,6 +18,7 @@ export function withHomePage(Component: React.FC<HomePageProps>) {
       };
       fetchRetail();
     }, []);
+
     const newProps = {
       retail,
       ...props,

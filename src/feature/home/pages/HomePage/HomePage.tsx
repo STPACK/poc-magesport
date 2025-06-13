@@ -11,7 +11,7 @@ export function HomePage({ retail }: HomePageProps) {
     <div className="desktop:px-0 px-[16px] mobile-tablet:px-[8px]">
       <RetailSlide retail={retail} />
       <PartnerList className="my-[48px]" />
-      <BannerList className="my-[24px]" />
+      <BannerList className="my-[48px]" />
       <ContactUs className="mt-[100px]" />
     </div>
   );

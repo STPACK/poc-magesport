@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { Element, scroller } from "react-scroll";
 
 import { BannerListProps } from "./interface";
 import { cn } from "@/lib/util";
@@ -27,48 +28,68 @@ export function BannerList({ className }: BannerListProps) {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (banners.length > 0) {
+      const hash = window.location.hash;
+      if (hash) {
+        const target = hash.replace("#", "");
+        console.log(target, "target");
+
+        setTimeout(() => {
+          scroller.scrollTo(target, {
+            duration: 300,
+            smooth: true,
+            offset: -80,
+          });
+        }, 100);
+      }
+    }
+  }, [banners]);
+
   return (
-    <section
-      id="sales-channels"
-      className={cn(
-        "grid grid-cols-1 gap-[16px] max-w-[1024px] mx-auto",
-        className
-      )}
-    >
-      {banners.map((image) => (
-        <div key={image.id} style={{ position: "relative" }}>
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              paddingTop: `${(3 / 6.5) * 100}%`,
-            }}
-          >
-            <Image
-              src={image.imageUrl}
-              alt="mega-sport-banner"
-              className="object-cover"
-              fill
-            />
-            {image.linkAreas.map((area) => (
-              <a
-                key={area.id}
-                href={area.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  position: "absolute",
-                  top: `${area.y * 100}%`,
-                  left: `${area.x * 100}%`,
-                  width: `${area.width * 100}%`,
-                  height: `${area.height * 100}%`,
-                  boxSizing: "border-box",
-                }}
+    <Element name="sales-channels">
+      <section
+        className={cn(
+          "grid grid-cols-1 gap-[16px] max-w-[1024px] mx-auto",
+          className
+        )}
+      >
+        {banners.map((image) => (
+          <div key={image.id} style={{ position: "relative" }}>
+            <div
+              style={{
+                position: "relative",
+                width: "100%",
+                paddingTop: `${(3 / 6.5) * 100}%`,
+              }}
+            >
+              <Image
+                src={image.imageUrl}
+                alt="mega-sport-banner"
+                className="object-cover"
+                fill
               />
-            ))}
+              {image.linkAreas.map((area) => (
+                <a
+                  key={area.id}
+                  href={area.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    position: "absolute",
+                    top: `${area.y * 100}%`,
+                    left: `${area.x * 100}%`,
+                    width: `${area.width * 100}%`,
+                    height: `${area.height * 100}%`,
+                    boxSizing: "border-box",
+                  }}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
-    </section>
+        ))}
+      </section>
+    </Element>
   );
 }

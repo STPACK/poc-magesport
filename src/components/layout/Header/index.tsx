@@ -43,15 +43,13 @@ export function Header({ className }: HeaderProps) {
           to="sales-channels"
           smooth={true}
           duration={500}
-          className={cn(
-            "flex-col all-center cursor-pointer px-3 mobile-tablet:px-1",
-            {
-              "text-info border-b-2 border-info": isActive("/#sales-channels"),
-            }
-          )}
+          offset={-80}
+          className="flex-col all-center cursor-pointer px-3 mobile-tablet:px-1"
         >
-          <ShoppingCartOutlined />
-          Channels
+          <Link href="/#sales-channels" className={cn("flex-col all-center")}>
+            <ShoppingCartOutlined />
+            Channels
+          </Link>
         </ScrollLink>
         <Link
           href="/tax-invoice"
