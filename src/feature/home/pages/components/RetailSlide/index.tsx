@@ -8,7 +8,7 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-import { EffectCoverflow, Navigation } from "swiper/modules";
+import { EffectCoverflow, Navigation, Autoplay } from "swiper/modules";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { RetailSlideProps } from "./interface";
 import Image from "next/image";
@@ -41,7 +41,8 @@ export function RetailSlide({ retail }: RetailSlideProps) {
           nextEl: `.swiperButtonNext`,
           prevEl: `.swiperButtonPrev`,
         }}
-        modules={[EffectCoverflow, Navigation]}
+        modules={[EffectCoverflow, Navigation, Autoplay]}
+        autoplay={{ delay: 3000, disableOnInteraction: false }}
         className="max-w-[850px] mx-auto"
       >
         {retail.map((item) => (
