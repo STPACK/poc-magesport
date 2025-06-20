@@ -15,11 +15,11 @@ export function ContactUs({ className }: ContactUsProps) {
     >
       <div className="flex flex-col gap-[10px]">
         <h2 className="text-[24px] mobile:text-[16px] font-bold">ติดต่อเรา</h2>
-        <Image src="/line-qr.webp" width={200} height={200} alt="logo" />
+        <Image src="/line-image.webp" width={200} height={200} alt="logo" />
 
         <div>
           <h3 className="font-bold">Sales Manager</h3>
-          <p>088 598 9844</p>
+          <p>06 4546 4528</p>
           <p>BEST SELLER CO., LTD.</p>
           <p>
             3/3,13,15,17,19,21,23,25,33,35,37,39
@@ -31,7 +31,7 @@ export function ContactUs({ className }: ContactUsProps) {
         </div>
         <div>
           <h3 className="font-bold">ฝ่ายขาย</h3>
-          <p>088 598 9844</p>
+          <p>06 4546 4528</p>
           <p>บริษัท เบสท์ เซลเลอร์ จำกัด</p>
           <p>
             3/3,13,15,17,19,21,23,25,33,35,37,39
